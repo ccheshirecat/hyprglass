@@ -8,7 +8,7 @@ import typing as t
 from datetime import UTC, datetime
 
 # Third Party
-from litestar import Request, Response, get, post
+from litestar import Request, Response, get, post, Router
 from litestar.di import Provide
 from litestar.background_tasks import BackgroundTask
 from litestar.exceptions import HTTPException
@@ -21,10 +21,7 @@ from hyperglass.state import HyperglassState
 from .state import get_state
 
 __all__ = (
-    "iperf3_test",
-    "iperf3_servers",
-    "iperf3_command",
-    "speedtest_files",
+    "speedtest_router",
 )
 
 # Global iperf3 servers with high bandwidth capacity
@@ -93,13 +90,13 @@ SPEEDTEST_FILES = [
 ]
 
 
-@get("/api/speedtest/iperf3/servers")
+@get("/iperf3/servers")
 async def iperf3_servers() -> t.List[t.Dict[str, t.Any]]:
     """Get list of available iperf3 servers."""
     return IPERF3_SERVERS
 
 
-@post("/api/speedtest/iperf3/test", dependencies={"_state": Provide(get_state)})
+@post("/iperf3/test", dependencies={"_state": Provide(get_state)})
 async def iperf3_test(_state: HyperglassState, request: Request, data: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
     """Run iperf3 test against specified server."""
     
@@ -204,7 +201,7 @@ async def iperf3_test(_state: HyperglassState, request: Request, data: t.Dict[st
         raise HTTPException(status_code=500, detail=f"iperf3 test failed: {str(e)}")
 
 
-@get("/api/speedtest/iperf3/command")
+@get("/iperf3/command")
 async def iperf3_command(request: Request, server_id: str = "iperf_he_fremont") -> t.Dict[str, t.Any]:
     """Get iperf3 command for user to run against our server."""
     
@@ -251,7 +248,7 @@ async def iperf3_command(request: Request, server_id: str = "iperf_he_fremont") 
     }
 
 
-@get("/api/speedtest/files")
+@get("/files")
 async def speedtest_files(request: Request) -> t.Dict[str, t.Any]:
     """Get speed test file download links."""
     
@@ -276,3 +273,15 @@ async def speedtest_files(request: Request) -> t.Dict[str, t.Any]:
             }
         }
     }
+
+
+# Create router with all speedtest endpoints
+speedtest_router = Router(
+    path="/api/speedtest",
+    route_handlers=[
+        iperf3_servers,
+        iperf3_test,
+        iperf3_command,
+        speedtest_files,
+    ],
+)

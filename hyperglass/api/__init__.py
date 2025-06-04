@@ -16,7 +16,7 @@ from hyperglass.exceptions import HyperglassError
 # Local
 from .events import check_redis
 from .routes import info, query, device, devices, queries
-from .routes_speedtest import iperf3_test, iperf3_servers, iperf3_command, speedtest_files
+from .routes_speedtest import speedtest_router
 from .speedtest_files import serve_speedtest_file
 from .middleware import COMPRESSION_CONFIG, create_cors_config
 from .error_handlers import app_handler, http_handler, default_handler, validation_handler
@@ -43,10 +43,7 @@ HANDLERS = [
     queries,
     info,
     query,
-    iperf3_test,
-    iperf3_servers,
-    iperf3_command,
-    speedtest_files,
+    speedtest_router,
     serve_speedtest_file,
 ]
 
