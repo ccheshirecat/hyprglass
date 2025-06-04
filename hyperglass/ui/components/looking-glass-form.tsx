@@ -233,18 +233,25 @@ export const LookingGlassForm = (): JSX.Element => {
         </FormRow>
       </chakra.form>
 
-      {/* Speed Test Components */}
+      {/* Speed Test Components - Integrated Layout */}
       <Flex
         w="100%"
         maxW={{ base: '100%', lg: '75%' }}
         mx="auto"
-        mt={8}
-        flexDir="column"
-        gap={6}
+        mt={6}
+        flexDir={{ base: 'column', lg: 'row' }}
+        gap={4}
       >
-        <Iperf3Test />
-        <SpeedTestDownload />
-        <BGPVisualization asn="211747" />
+        {/* Left Column - Network Tests */}
+        <VStack flex={1} spacing={4}>
+          <Iperf3Test />
+          <SpeedTestDownload />
+        </VStack>
+
+        {/* Right Column - BGP Visualization */}
+        <Box flex={1}>
+          <BGPVisualization asn="211747" compact />
+        </Box>
       </Flex>
     </FormProvider>
   );

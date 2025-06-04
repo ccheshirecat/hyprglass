@@ -58,43 +58,47 @@ export const BGPVisualization = ({ asn = '211747', compact = false }: BGPVisuali
   if (compact) {
     return (
       <Box
-        p={3}
-        border="1px"
-        borderColor={borderColor}
-        borderRadius="md"
-        bg={bgColor}
+        bg="blackAlpha.400"
+        backdropFilter="blur(10px)"
+        border="1px solid"
+        borderColor="whiteAlpha.100"
+        borderRadius="lg"
+        p={4}
+        _hover={{ borderColor: "purple.400" }}
+        transition="all 0.2s"
+        h="fit-content"
       >
-        <HStack justify="space-between" mb={2}>
-          <Text fontSize="sm" fontWeight="medium">
-            <DynamicIcon icon={{ fa: 'FaProjectDiagram' }} mr={1} />
-            BGP Topology (AS{asn})
+        <Flex justify="space-between" align="center" mb={4}>
+          <Text fontSize="sm" fontWeight="600" color="purple.300" textTransform="uppercase" letterSpacing="wider">
+            <DynamicIcon icon={{ fa: 'FaProjectDiagram' }} mr={2} />
+            Network Topology
           </Text>
-          <Button size="xs" variant="outline" onClick={openBGPTools}>
-            View Details
-          </Button>
-        </HStack>
-        
-        <Box position="relative" minH="120px">
+          <Badge colorScheme="purple" size="sm" variant="outline">
+            AS{asn}
+          </Badge>
+        </Flex>
+
+        <Box position="relative" minH="200px">
           {!imageLoaded && !imageError && (
-            <Skeleton height="120px" borderRadius="md" />
+            <Skeleton height="200px" borderRadius="md" />
           )}
-          
+
           {imageError && (
             <Flex
-              height="120px"
+              height="200px"
               align="center"
               justify="center"
-              bg="gray.50"
+              bg="blackAlpha.300"
               borderRadius="md"
               flexDir="column"
             >
-              <DynamicIcon icon={{ fa: 'FaExclamationTriangle' }} color="orange.500" mb={1} />
-              <Text fontSize="xs" color="gray.500">
+              <DynamicIcon icon={{ fa: 'FaExclamationTriangle' }} color="orange.400" mb={2} />
+              <Text fontSize="xs" color="gray.400">
                 Visualization unavailable
               </Text>
             </Flex>
           )}
-          
+
           <Image
             src={visualizationUrl}
             alt={`BGP topology for AS${asn}`}
@@ -102,29 +106,54 @@ export const BGPVisualization = ({ asn = '211747', compact = false }: BGPVisuali
             onError={handleImageError}
             display={imageLoaded ? 'block' : 'none'}
             w="100%"
-            h="120px"
+            h="200px"
             objectFit="contain"
             borderRadius="md"
           />
         </Box>
+
+        <HStack justify="space-between" mt={3}>
+          <Button size="xs" variant="ghost" onClick={handleRefresh} color="gray.400">
+            <DynamicIcon icon={{ fa: 'FaSync' }} />
+          </Button>
+          <Button size="xs" variant="ghost" onClick={openBGPTools} color="gray.400">
+            <DynamicIcon icon={{ fa: 'FaExternalLinkAlt' }} />
+          </Button>
+        </HStack>
       </Box>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <Flex justify="space-between" align="center">
-          <Heading size="md">
-            <DynamicIcon icon={{ fa: 'FaProjectDiagram' }} mr={2} />
-            BGP Network Topology
-          </Heading>
-          <Badge colorScheme="purple" variant="subtle">
-            AS{asn}
-          </Badge>
-        </Flex>
-      </CardHeader>
-      <CardBody>
+    <Box
+      bg="whiteAlpha.50"
+      backdropFilter="blur(10px)"
+      border="1px solid"
+      borderColor="whiteAlpha.200"
+      borderRadius="xl"
+      p={6}
+      _dark={{
+        bg: "blackAlpha.300",
+        borderColor: "whiteAlpha.100",
+      }}
+    >
+      <Flex justify="space-between" align="center" mb={6}>
+        <Heading size="lg" fontWeight="300" letterSpacing="wide">
+          <DynamicIcon icon={{ fa: 'FaProjectDiagram' }} mr={3} color="purple.400" />
+          Network Topology
+        </Heading>
+        <Badge
+          colorScheme="purple"
+          variant="subtle"
+          px={3}
+          py={1}
+          borderRadius="full"
+          fontSize="xs"
+          fontWeight="medium"
+        >
+          AS{asn}
+        </Badge>
+      </Flex>
         <VStack spacing={4} align="stretch">
           <Text fontSize="sm" color="gray.600">
             Real-time visualization of BGP routing paths and network topology for AS{asn}.

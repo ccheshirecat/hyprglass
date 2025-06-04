@@ -222,67 +222,64 @@ export const SpeedTestDownload = (): JSX.Element => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <Flex justify="space-between" align="center">
-          <Heading size="md">
-            <DynamicIcon icon={{ fa: 'FaDownload' }} mr={2} />
-            Speed Test Downloads
-          </Heading>
-          <Badge colorScheme="green" variant="subtle">
-            Bandwidth Testing
-          </Badge>
-        </Flex>
-      </CardHeader>
-      <CardBody>
-        <VStack spacing={4} align="stretch">
-          <Text fontSize="sm" color="gray.600">
-            Download test files to measure your connection speed. Files are generated on-demand.
-          </Text>
-
-          {/* Download Buttons */}
-          <If condition={!isLoading && speedTestData}>
-            <Then>
-              {speedTestData && (
-                <VStack spacing={3} align="stretch">
-                  {speedTestData.files.map((file) => {
+    <Box
+      bg="blackAlpha.400"
+      backdropFilter="blur(10px)"
+      border="1px solid"
+      borderColor="whiteAlpha.100"
+      borderRadius="lg"
+      p={4}
+      _hover={{ borderColor: "green.400" }}
+      transition="all 0.2s"
+    >
+      <Flex justify="space-between" align="center" mb={4}>
+        <Text fontSize="sm" fontWeight="600" color="green.300" textTransform="uppercase" letterSpacing="wider">
+          <DynamicIcon icon={{ fa: 'FaDownload' }} mr={2} />
+          Bandwidth Testing
+        </Text>
+        <Badge colorScheme="green" size="sm" variant="outline">
+          Download
+        </Badge>
+      </Flex>
+      <VStack spacing={3} align="stretch">
+        {/* Compact Download Buttons */}
+        <If condition={!isLoading && speedTestData}>
+          <Then>
+            {speedTestData && (
+              <HStack spacing={2} wrap="wrap">
+                {speedTestData.files.map((file) => {
                     const downloading = isDownloading(file.filename);
                     const progress = getProgress(file.filename);
                     const downloadData = activeDownloads.get(file.filename);
 
                     return (
-                      <Box key={file.filename} p={3} border="1px" borderColor="gray.200" borderRadius="md">
-                        <HStack justify="space-between" mb={2}>
-                          <VStack align="start" spacing={0}>
-                            <Text fontWeight="medium">{file.size} Test File</Text>
-                            <Text fontSize="xs" color="gray.500">{file.description}</Text>
-                          </VStack>
-                          
-                          <If condition={downloading}>
-                            <Then>
-                              <Button
-                                size="sm"
-                                colorScheme="red"
-                                variant="outline"
-                                onClick={() => cancelDownload(file.filename)}
-                                leftIcon={<DynamicIcon icon={{ fa: 'FaStop' }} />}
-                              >
-                                Cancel
-                              </Button>
-                            </Then>
-                            <Else>
-                              <Button
-                                size="sm"
-                                colorScheme="blue"
-                                onClick={() => startDownload(file)}
-                                leftIcon={<DynamicIcon icon={{ fa: 'FaDownload' }} />}
-                                isDisabled={activeDownloads.has(file.filename)}
-                              >
-                                Download
-                              </Button>
-                            </Else>
-                          </If>
-                        </HStack>
+                      <VStack key={file.filename} spacing={1}>
+                        <If condition={downloading}>
+                          <Then>
+                            <Button
+                              size="xs"
+                              colorScheme="red"
+                              variant="outline"
+                              onClick={() => cancelDownload(file.filename)}
+                              leftIcon={<DynamicIcon icon={{ fa: 'FaStop' }} />}
+                            >
+                              Cancel {file.size}
+                            </Button>
+                          </Then>
+                          <Else>
+                            <Button
+                              size="xs"
+                              colorScheme="green"
+                              variant="outline"
+                              onClick={() => startDownload(file)}
+                              leftIcon={<DynamicIcon icon={{ fa: 'FaDownload' }} />}
+                              isDisabled={activeDownloads.has(file.filename)}
+                              _hover={{ bg: "green.500", color: "white" }}
+                            >
+                              {file.size}
+                            </Button>
+                          </Else>
+                        </If>
 
                         <If condition={downloading || downloadData?.isComplete}>
                           <Then>

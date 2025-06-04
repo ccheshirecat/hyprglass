@@ -168,30 +168,88 @@ export const Iperf3Test = (): JSX.Element => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <Flex justify="space-between" align="center">
-          <Heading size="md">
-            <DynamicIcon icon={{ fa: 'FaNetworkWired' }} mr={2} />
-            iperf3 Speed Test
-          </Heading>
-          <Badge colorScheme="blue" variant="subtle">
-            Network Performance
-          </Badge>
-        </Flex>
-      </CardHeader>
-      <CardBody>
-        <VStack spacing={4} align="stretch">
-          {/* Test Configuration */}
-          <Box>
-            <Text fontWeight="semibold" mb={2}>Test Configuration</Text>
-            <VStack spacing={3} align="stretch">
+    <Box
+      bg="blackAlpha.400"
+      backdropFilter="blur(10px)"
+      border="1px solid"
+      borderColor="whiteAlpha.100"
+      borderRadius="lg"
+      p={4}
+      _hover={{ borderColor: "blue.400" }}
+      transition="all 0.2s"
+    >
+      <Flex justify="space-between" align="center" mb={4}>
+        <Text fontSize="sm" fontWeight="600" color="blue.300" textTransform="uppercase" letterSpacing="wider">
+          <DynamicIcon icon={{ fa: 'FaNetworkWired' }} mr={2} />
+          Network Performance
+        </Text>
+        <Badge colorScheme="blue" size="sm" variant="outline">
+          iperf3
+        </Badge>
+      </Flex>
+      <VStack spacing={3} align="stretch">
+          {/* Compact Configuration */}
+          <HStack spacing={3}>
+            <Box flex={2}>
+              <Text fontSize="xs" mb={1} color="gray.400">Server</Text>
+              <Select
+                size="sm"
+                value={selectedServer}
+                onChange={(e) => setSelectedServer(e.target.value)}
+                isDisabled={iperfMutation.isPending}
+                bg="blackAlpha.300"
+                border="1px solid"
+                borderColor="whiteAlpha.200"
+                borderRadius="md"
+                fontSize="xs"
+                _hover={{ borderColor: "blue.400" }}
+                _focus={{ borderColor: "blue.400" }}
+              >
+                {servers.map((server) => (
+                  <option key={server.id} value={server.id}>
+                    {server.name.split(' ')[0]} - {server.location.split(',')[0]}
+                  </option>
+                ))}
+              </Select>
+            </Box>
+
+            <Box flex={1}>
+              <Text fontSize="xs" mb={1} color="gray.400">Direction</Text>
+              <Select
+                size="sm"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value as 'download' | 'upload')}
+                isDisabled={iperfMutation.isPending}
+                bg="blackAlpha.300"
+                border="1px solid"
+                borderColor="whiteAlpha.200"
+                borderRadius="md"
+                fontSize="xs"
+                _hover={{ borderColor: "blue.400" }}
+                _focus={{ borderColor: "blue.400" }}
+              >
+                <option value="download">Download</option>
+                <option value="upload">Upload</option>
+              </Select>
+            </Box>
+          </HStack>
+            <VStack spacing={4} align="stretch">
               <Box>
-                <Text fontSize="sm" mb={1}>Target Server</Text>
+                <Text fontSize="sm" mb={2} color="gray.400" fontWeight="medium">Target Server</Text>
                 <Select
                   value={selectedServer}
                   onChange={(e) => setSelectedServer(e.target.value)}
                   isDisabled={iperfMutation.isPending}
+                  bg="whiteAlpha.50"
+                  border="1px solid"
+                  borderColor="whiteAlpha.200"
+                  borderRadius="md"
+                  _hover={{ borderColor: "blue.400" }}
+                  _focus={{ borderColor: "blue.400", boxShadow: "0 0 0 1px var(--chakra-colors-blue-400)" }}
+                  _dark={{
+                    bg: "whiteAlpha.100",
+                    borderColor: "whiteAlpha.200",
+                  }}
                 >
                   {servers.map((server) => (
                     <option key={server.id} value={server.id}>
@@ -234,24 +292,29 @@ export const Iperf3Test = (): JSX.Element => {
           <Divider />
 
           {/* Test Controls */}
-          <HStack justify="space-between">
+          <HStack spacing={2}>
             <Button
+              size="sm"
               colorScheme="blue"
               onClick={handleRunTest}
               isLoading={iperfMutation.isPending}
-              loadingText="Running Test..."
+              loadingText="Testing..."
               leftIcon={<DynamicIcon icon={{ fa: 'FaPlay' }} />}
               isDisabled={serversLoading}
+              flex={1}
             >
-              Run iperf3 Test
+              Run Test
             </Button>
-            
+
             <Button
-              variant="outline"
+              size="sm"
+              variant="ghost"
               onClick={() => setShowCommands(!showCommands)}
               leftIcon={<DynamicIcon icon={{ fa: 'FaTerminal' }} />}
+              color="gray.400"
+              _hover={{ color: "white" }}
             >
-              Show Commands
+              CLI
             </Button>
           </HStack>
 

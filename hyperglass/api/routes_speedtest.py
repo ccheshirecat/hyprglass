@@ -96,8 +96,8 @@ async def iperf3_servers() -> t.List[t.Dict[str, t.Any]]:
     return IPERF3_SERVERS
 
 
-@post("/iperf3/test", dependencies={"_state": Provide(get_state)})
-async def iperf3_test(_state: HyperglassState, request: Request, data: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
+@post("/iperf3/test")
+async def iperf3_test(data: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
     """Run iperf3 test against specified server."""
     
     server_id = data.get("server_id")
@@ -202,19 +202,11 @@ async def iperf3_test(_state: HyperglassState, request: Request, data: t.Dict[st
 
 
 @get("/iperf3/command")
-async def iperf3_command(request: Request, server_id: str = "iperf_he_fremont") -> t.Dict[str, t.Any]:
+async def iperf3_command(server_id: str = "iperf_he_fremont") -> t.Dict[str, t.Any]:
     """Get iperf3 command for user to run against our server."""
     
-    # Get server info from state or config
-    state = await get_state()
-    
-    # Use the first device's address as our server IP
-    # In a real implementation, you'd configure this properly
-    devices = state.devices
-    if devices:
-        server_ip = list(devices.values())[0].address
-    else:
-        server_ip = "your-server-ip"
+    # Use a default server IP - you can configure this
+    server_ip = "194.46.58.111"  # Your Aurora server IP
     
     # Find the target server for comparison
     target_server = None
@@ -252,8 +244,9 @@ async def iperf3_command(request: Request, server_id: str = "iperf_he_fremont") 
 async def speedtest_files(request: Request) -> t.Dict[str, t.Any]:
     """Get speed test file download links."""
     
-    # Get base URL from request
-    base_url = f"{request.url.scheme}://{request.url.netloc}"
+    # Get base URL from request - force HTTPS if behind proxy
+    scheme = "https" if request.headers.get("x-forwarded-proto") == "https" else request.url.scheme
+    base_url = f"{scheme}://{request.url.netloc}"
     
     files = []
     for file_info in SPEEDTEST_FILES:
