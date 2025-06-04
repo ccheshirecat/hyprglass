@@ -78,6 +78,7 @@ SCRAPE_HELPERS = {
 DRIVER_MAP = {
     "bird": "netmiko",
     "frr": "netmiko",
+    "gobgp": "netmiko",
     "openbgpd": "netmiko",
     "http": "hyperglass_http_client",
 }
@@ -85,5 +86,6 @@ DRIVER_MAP = {
 LINUX_PLATFORMS = (
     "frr",
     "bird",
+    "gobgp",
     "openbgpd",
 )

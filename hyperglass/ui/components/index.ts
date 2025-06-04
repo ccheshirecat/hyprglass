@@ -5,12 +5,14 @@
  * components.
  */
 
+export * from './bgp-visualization';
 export * from './debugger';
 export * from './directive-info-modal';
 export * from './footer';
 export * from './form-field';
 export * from './greeting';
 export * from './header';
+export * from './iperf3-test';
 export * from './layout';
 export * from './location-card';
 export * from './looking-glass-form';
@@ -25,6 +27,7 @@ export * from './reset-button';
 export * from './resolved-target';
 export * from './results';
 export * from './select';
+export * from './speedtest-download';
 export * from './submit-button';
 export * from './table';
 export * from './user-ip';

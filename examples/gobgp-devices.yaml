@@ -1,0 +1,125 @@
+# Example GoBGP device configurations for hyperglass
+# Copy the relevant sections to your etc/hyperglass/devices.yaml file
+
+devices:
+  # Single GoBGP router configuration
+  - name: Aurora GoBGP Router
+    address: 194.46.58.111
+    credential:
+      username: root  # Change to your username
+      password: your_secure_password  # Change to your password
+    platform: gobgp
+    attrs:
+      source4: 194.46.58.111  # Your IPv4 source for ping/traceroute
+      source6: 2a06:7e00:0:E00::2  # Your IPv6 source for ping/traceroute
+    directives:
+      - __hyperglass_gobgp_bgp_route__
+      - __hyperglass_gobgp_bgp_aspath__
+      - __hyperglass_gobgp_bgp_community__
+      - __hyperglass_gobgp_ping__
+      - __hyperglass_gobgp_traceroute__
+
+  # Multiple GoBGP routers in different locations
+  - name: GoBGP Router NYC
+    address: 192.168.1.10
+    credential:
+      username: hyperglass
+      password: secure_password
+    platform: gobgp
+    attrs:
+      source4: 192.168.1.10
+      source6: 2001:db8:1::10
+    directives:
+      - __hyperglass_gobgp_bgp_route__
+      - __hyperglass_gobgp_bgp_aspath__
+      - __hyperglass_gobgp_bgp_community__
+      - __hyperglass_gobgp_ping__
+      - __hyperglass_gobgp_traceroute__
+
+  - name: GoBGP Router LAX
+    address: 192.168.2.10
+    credential:
+      username: hyperglass
+      password: secure_password
+    platform: gobgp
+    attrs:
+      source4: 192.168.2.10
+      source6: 2001:db8:2::10
+    directives:
+      - __hyperglass_gobgp_bgp_route__
+      - __hyperglass_gobgp_bgp_aspath__
+      - __hyperglass_gobgp_bgp_community__
+      - __hyperglass_gobgp_ping__
+      - __hyperglass_gobgp_traceroute__
+
+  # GoBGP with SSH key authentication
+  - name: GoBGP Router with SSH Key
+    address: 10.0.0.100
+    credential:
+      username: gobgp-user
+      key: /path/to/private/key  # SSH private key path
+    platform: gobgp
+    attrs:
+      source4: 10.0.0.100
+      source6: 2001:db8:3::100
+    directives:
+      - __hyperglass_gobgp_bgp_route__
+      - __hyperglass_gobgp_bgp_aspath__
+      - __hyperglass_gobgp_bgp_community__
+      - __hyperglass_gobgp_ping__
+      - __hyperglass_gobgp_traceroute__
+
+  # GoBGP with custom port
+  - name: GoBGP Router Custom Port
+    address: gobgp.example.com:2222
+    credential:
+      username: admin
+      password: admin_password
+    platform: gobgp
+    attrs:
+      source4: 203.0.113.1
+      source6: 2001:db8:4::1
+    directives:
+      - __hyperglass_gobgp_bgp_route__
+      - __hyperglass_gobgp_bgp_aspath__
+      - __hyperglass_gobgp_bgp_community__
+      - __hyperglass_gobgp_ping__
+      - __hyperglass_gobgp_traceroute__
+
+  # GoBGP with selective directives (only BGP route and ping)
+  - name: GoBGP Router Limited
+    address: 172.16.1.1
+    credential:
+      username: readonly
+      password: readonly_password
+    platform: gobgp
+    attrs:
+      source4: 172.16.1.1
+      source6: 2001:db8:5::1
+    directives:
+      - builtins: false  # Disable all built-in directives
+      - __hyperglass_gobgp_bgp_route__  # Only enable BGP route lookup
+      - __hyperglass_gobgp_ping__  # Only enable ping
+
+  # Mixed environment: GoBGP and BIRD routers
+  - name: BIRD Router Legacy
+    address: 192.168.100.1
+    credential:
+      username: bird-user
+      password: bird_password
+    platform: bird
+    attrs:
+      source4: 192.168.100.1
+      source6: 2001:db8:100::1
+    # Uses default BIRD directives
+
+  - name: GoBGP Router Modern
+    address: 192.168.100.2
+    credential:
+      username: gobgp-user
+      password: gobgp_password
+    platform: gobgp
+    attrs:
+      source4: 192.168.100.2
+      source6: 2001:db8:100::2
+    # Uses GoBGP directives

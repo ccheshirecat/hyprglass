@@ -158,6 +158,11 @@ class Formatter:
                 return self._with_formatter(self._bird_bgp_aspath)
             if self.query_type == "bgp_community":
                 return self._with_formatter(self._bird_bgp_community)
+        if self.platform == "gobgp":
+            if self.query_type == "bgp_aspath":
+                return self._with_formatter(self._gobgp_bgp_aspath)
+            if self.query_type == "bgp_community":
+                return self._with_formatter(self._gobgp_bgp_community)
         return self._with_formatter(self._default)
 
     def _default(self, target: str) -> str:
@@ -225,3 +230,24 @@ class Formatter:
         """Convert from standard community format to BIRD format."""
         parts = target.split(":")
         return f'({",".join(parts)})'
+
+    def _gobgp_bgp_aspath(self, target: str) -> str:
+        """Convert AS_PATH format for GoBGP grep filtering."""
+        # For GoBGP, we use the target as-is for grep pattern matching
+        # Convert Cisco-style wildcards to regex patterns for grep
+        query = str(target)
+
+        # Replace leading underscore with regex pattern for "starts with"
+        if query.startswith("_"):
+            query = query[1:] + r"(\s|$)"
+
+        # Replace trailing underscore with regex pattern for "ends with"
+        if query.endswith("_"):
+            query = r"(\s|^)" + query[:-1]
+
+        return query
+
+    def _gobgp_bgp_community(self, target: str) -> str:
+        """Format community string for GoBGP grep filtering."""
+        # GoBGP displays communities in standard format, so we can use target as-is
+        return target

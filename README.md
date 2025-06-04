@@ -36,6 +36,7 @@ hyperglass is intended to make implementing a looking glass too easy not to do, 
   - Cisco NX-OS
   - Cisco IOS-XR
   - FRRouting
+  - GoBGP
   - Huawei VRP
   - Juniper Junos
   - Mikrotik

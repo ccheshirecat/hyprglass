@@ -12,6 +12,9 @@ import {
   QueryType,
   SubmitButton,
 } from '~/components';
+import { Iperf3Test } from './iperf3-test';
+import { SpeedTestDownload } from './speedtest-download';
+import { BGPVisualization } from './bgp-visualization';
 import { useConfig } from '~/context';
 import { FormRow } from '~/elements';
 import { useDevice, useFormState, useGreeting, useStrf } from '~/hooks';
@@ -229,6 +232,20 @@ export const LookingGlassForm = (): JSX.Element => {
           </Flex>
         </FormRow>
       </chakra.form>
+
+      {/* Speed Test Components */}
+      <Flex
+        w="100%"
+        maxW={{ base: '100%', lg: '75%' }}
+        mx="auto"
+        mt={8}
+        flexDir="column"
+        gap={6}
+      >
+        <Iperf3Test />
+        <SpeedTestDownload />
+        <BGPVisualization asn="211747" />
+      </Flex>
     </FormProvider>
   );
 };
