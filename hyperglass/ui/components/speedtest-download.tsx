@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { useState, useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { If, Then } from 'react-if';
+import { If, Then, Else } from 'react-if';
 import { DynamicIcon } from '~/elements';
 
 interface SpeedTestFile {
