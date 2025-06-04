@@ -1,0 +1,16 @@
+devices:
+  - name: GoBGP Router
+    address: 127.0.0.1  # Change this to your GoBGP router's IP or hostname
+    credential:
+      username: your_username  # Change this to your username
+      password: your_password  # Change this to your password
+    platform: linux_ssh  # GoBGP runs on Linux, so we use linux_ssh
+    attrs:
+      source4: 192.0.2.1  # Change this to your IPv4 source address
+      source6: 2001:db8::1  # Change this to your IPv6 source address
+    directives:
+      - gobgp_bgp_route
+      - gobgp_bgp_aspath
+      - gobgp_bgp_community
+      - gobgp_ping
+      - gobgp_traceroute

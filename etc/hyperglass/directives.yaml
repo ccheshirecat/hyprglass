@@ -1,0 +1,57 @@
+gobgp_bgp_route:
+  name: BGP Route
+  rules:
+    - condition: "0.0.0.0/0"
+      action: permit
+      command: "gobgp global rib -a ipv4 {target} -j"
+    - condition: "::/0"
+      action: permit
+      command: "gobgp global rib -a ipv6 {target} -j"
+  field:
+    description: IP Address, Prefix, or Hostname
+
+gobgp_bgp_aspath:
+  name: BGP AS Path
+  rules:
+    - condition: "*"
+      action: permit
+      commands:
+        - "gobgp global rib -a ipv4 -j | jq '.[] | select(.attrs[] | select(.type==2) | .as_path | contains([{target}]))'"
+        - "gobgp global rib -a ipv6 -j | jq '.[] | select(.attrs[] | select(.type==2) | .as_path | contains([{target}]))'"
+  field:
+    description: AS Path Regular Expression
+
+gobgp_bgp_community:
+  name: BGP Community
+  rules:
+    - condition: "*"
+      action: permit
+      commands:
+        - "gobgp global rib -a ipv4 -j | jq '.[] | select(.attrs[] | select(.type==8) | .communities | contains([{target}]))'"
+        - "gobgp global rib -a ipv6 -j | jq '.[] | select(.attrs[] | select(.type==8) | .communities | contains([{target}]))'"
+  field:
+    description: BGP Community String
+
+gobgp_ping:
+  name: Ping
+  rules:
+    - condition: "0.0.0.0/0"
+      action: permit
+      command: "ping -4 -c 5 -I {source4} {target}"
+    - condition: "::/0"
+      action: permit
+      command: "ping -6 -c 5 -I {source6} {target}"
+  field:
+    description: IP Address, Prefix, or Hostname
+
+gobgp_traceroute:
+  name: Traceroute
+  rules:
+    - condition: "0.0.0.0/0"
+      action: permit
+      command: "traceroute -4 -w 1 -q 1 -s {source4} {target}"
+    - condition: "::/0"
+      action: permit
+      command: "traceroute -6 -w 1 -q 1 -s {source6} {target}"
+  field:
+    description: IP Address, Prefix, or Hostname
